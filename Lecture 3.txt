@@ -1,0 +1,353 @@
+Linux System Administrators - User Management & Permissions 
+
+When we run any process it always runs as the owner of that process.
+All files and its access is owner dependent
+Every user has its own unique home directory.
+
+eg /home/ksd
+
+Linux uses 'UID' (User ID) to identify a user.
+We use username which is an easy way.
+
+System also uses groups to manage permissions.
+
+These groups are just a set of users with similar permissions.
+
+Linux uses 'GID' (Group ID) to identify a group.
+
+Apart from human users, linux has many other in-built users.
+
+One of them is 'ROOT' (aka SUPERUSER)
+
+Root:
+- Most important and powerful user.
+- Can access any file in the system.
+- Can start or terminate any process in the entire linux system.
+
+We as human users can't access some files in linux
+
+eg. cat /etc/shadow
+it shows permission denied
+
+to know more about this, we do ls -l /etc/shadow
+it says this file belongs to the root user
+
+** To get root user access, use 'SUDO'
+
+SUDO - SUperuser DO
+
+** To become a superuser/root user - Use 'sudo su'
+
+** To exit (i.e. return to a normal user) - use 'exit'
+
+All the root commands are not saved in our history so it is considered dangerous to operate as a root user as we might do something which might crash the system and there would be no record of it. Hence, it is not recommended to operate as a root user.
+
+Safer option is using sudo
+
+It is also advisable to not give everyone access to the sudo command.
+
+** To edit and view this list, use: 'sudo cat /etc/sudoers
+
+** To get access to a file which has the data of all the present users (including internal ones) in our system - Do 'sudo cat /etc/passwd'
+
+we get a list of several users here.
+
+Let's see the root user:
+
+root:x:0:0:root:/root:/bin/bash
+↓    ↓ ↓ ↓  ↓     ↓       ↓   
+1    2 3 4  5     6       7   
+
+1. username
+2. password for user (stored  in '/etc/shadow' file)
+3. user id (0 here)
+4. group id
+5. user info
+6. home directory
+7. shell (here /bin/bash)
+
+Let's see the root password from /etc/shadow file:
+
+root:!:19441:0:99999:7: : :
+↓    ↓  ↓    ↓  ↓    ↓ ↓ ↓ ↓
+1    2  3    4  5    6 7 8 9
+
+1. username
+
+2. encrypted password of the user
+
+3. date of last password change (starts from 1st January 1970, here it is 19441 which means, 19441 days have passed from 1st January 1970 since I last changed my 
+password)
+
+4. Minimum password age (It means we have to wait for 0 days to see the effect of our new password change, if we decide to change our password) 
+(If it were 30 - Then it would mean that we need to wait for 30 days atleast to change our password, once we've set it)
+
+5. Max password age - Change password after every 99999 days (here)
+
+6. Warning period for the password: Here it is 7, hence it'll start to warn us from 7 days before the password expiration date to change our password.
+
+7. password expiry period - After password has expired (say 99999 days have passed) it'll start showing us the value that 'x' days have passed since our password has expired.
+
+8. Account Expiration Date - We can set it to a value which will mean that our account will expire in 'x' days.
+
+9. Reserved field - Not used currently
+
+PAM - Pluggable Authentication Module
+
+alternative of /etc/shadow for authentication 
+
+** To access a file which maintains the data of the group - Use 'sudo cat /etc/group'
+
+here for root group:
+
+root:x:0:
+↓    ↓ ↓ ↓
+1    2 3 4
+
+1. Group Name
+2. Group password
+3. Group ID (GID)
+4. List of users in that group (Empty here) 
+
+To separate multiple users, use commas (,)
+
+
+** Creating a user - use 'sudo useradd (username)'
+
+All things we just saw before are created and modified automatically when we create a user.
+
+** To delete a user - use 'sudo userdel (username)'
+
+** To change our password - use 'sudo passwd (username)'
+
+Once caught in a new password loop, you can't exit without changing your password. To avoid this, exit the current terminal and then start a new one. 
+
+** To change the username - use 'sudo hostname (new username)' and then restart the terminal.
+
+When we do 'ls -l' in home page, we see some stuff in the home directory.
+
+we see as follows,
+
+username (one who owns this directory) | groupname(one who owns this directory) |....| last modification time of the directory.
+
+Apart from this, in the beginning, we see:
+
+drwxrwxr-x 
+
+we see that it has 10 characters (10 bits to be precise),
+these are the permission bits of that directory.
+
+Even files have their own permission bits.
+
+drwxrwxr-x  can be divided into 4 parts:
+
+1. d - Type ('d' -> directory, '-' -> file, 'l' -> link) 
+here it is 'd' hence it is a directory
+(1 bit)
+
+2. rwx - User permissions on a file, directory or a link.
+(3 bits)
+
+3. rwx - Group permissions on a file, directory or a link.
+(3 bits)
+
+4. r-x - Other Permissions
+(3 bits)
+
+here general format is in the order of 'rwx'
+
+where:
+r - readable 
+w - writeable
+x - executable
+and '-' means empty
+
+All these are called 'Symbolic Representations of Permissions in Linux'
+
+Symbolic Representations of users - 'u'
+Symbolic Representations of groups - 'g'
+Symbolic Representations of others - 'o'
+
+Modifying the permissions - 
+Let's create a file named testing2.txt
+and do ls -l
+
+** Now do 'chmod'
+
+chmod - change or modify the file.
+
+Do 'chmod o+w (filename)'
+To allow writing permission to any other user
+o - others, + - give (add) permissions , w - to write 
+
+To deny (remove) permissions, use '-' instead of '+'
+
+To give a permission to multiple users or give multiple permissions to one user: 
+
+**'chmod ugo-rwx testing2.txt' - We removed the reading, writing and executing permissions of testing2.txt from all users, groups and others 
+
+**'chmod ugo+rwx testing2.txt' - We added the reading, writing and executing permissions of testing2.txt to all users, groups and others 
+
+Another way to change permissions:
+
+r - 4
+w - 2
+x - 1
+
+(we can use these numbers too insted of chars to modify the permissions)
+
+***'chmod +777 (filename)' (is same as 'chmod ugo+rwx testing2.txt')
+
+here user - 7 (rwx = 421 i.e. 4 + 2 + 1 = 7)
+group - 7 
+others - 7
++ - give permissions
+
+We can make several combinations from 4,2 and 1
+
+list of all combinations:
+0 → No combinations
+1 → execute 
+2 → write
+3 → write + execute 
+4 → read
+5 → read + execute
+6 → read + write
+7 → read + write + execute
+
+chmod is a very tricky command as it might be used to alter sensitive information of the root file. Hence it is not recommended much (There may be few exceptions eg. changing the rwx permissions of the PEM file while using AWS EC2 instance).
+
+** Changing the ownership of a particular file or directory - use 'sudo chown (username) (filename)'
+
+** Changing the group of a particular file or directory - use 'sudo chgrp (groupname) (filename)'
+
+** Changing the ownership + group of a particular file or directory - use 'sudo chown (username):(groupname) (filename)'
+
+UMASK:
+
+Sometimes when we create a file or a directory, it gets created with some default permissions,
+
+** we can change those default permission settings using 'umask (any no. from 000 to 777)'
+
+Note, the default permissions will be the result of the following and not the number entered with the umask command
+
+eg. umask 255
+
+then,
+777 - 255 = 522, 
+
+this (522) will be the default permissions of the ugo for any file or directory.
+
+
+Permission Types:
+
+
+1. // Set UID (SUID) 
+
+It (SUID) lets us do things in linux as the owner and not as ourselves, it grants us special access that was not accessible to us before. 
+
+eg, using the path of the system, do:
+
+'ls -l /usr/bin/passwd'
+
+here we see the following permission attached to it:
+
+-rwsr-xr-x
+
+here the 's' stands for SUID
+It means when any other user tries to run this command, they will automatically have the permission of the owners to run and execute this command
+
+This is an alternative of SUDO, as it bypasses it.
+
+2 types of 's':
+
+1. s → Gives owner permission and execution permission
+
+2. S → Gives only owner permission
+
+Ways of adding user permissions:
+
+** 1. sudo chmod u+s filename
+** 2. sudo chmod 4755 filename
+
+ 4 → SUID 
+
+ here we'll see small s (owner permission + execution permission) when we do ls -l
+
+ For capital S (owner permission only), do:
+
+ **'sudo chmod 4655 filename' (6 replaces 7 here)
+
+
+
+2. // SGID (Set Group ID) 
+
+ Does the same things as SUID but for groups.
+
+ Ways of adding group permissions:
+
+** 1. sudo chmod g+s filename
+** 2. sudo chmod 2755 filename
+
+** For capital S, do: 'sudo chmod 2745 filename'
+then do ls -l 
+
+4 → only read, don't execute
+
+To see default example: 
+
+** 'ls -l /usr/bin/wall'
+
+-rwxr-sr-x 1 root tty
+
+tty → tele type (it is the shell and auto-terminal)
+
+
+3. // Sticky Bit Permission
+
+It gives us all the permissions, except the deleting permission. Only the owner can delete the file.
+
+To see the permission of the contents inside the tmp (temporary) directory:
+
+** use: ls -l /tmp
+
+To see the permission of the directory itself, do:
+
+** ls -ld /tmp
+
+here we see: 
+
+drwxrwxrwt
+
+t → sticky bit
+
+Ways to add sticky bit permission:
+
+1. sudo chmod +t directory_name
+2. sudo chmod 1755 file_name
+
+1 → sticky bit permission
+
+We know 4,2,1 means readable writeable and executable 
+
+but here in permissions, 
+4: SUID
+2: SGID
+1: sticky bit
+
+Only sudo can delete this file now,
+** use 'sudo rm file_name'
+
+
+
+// Process Permissions
+
+Running Commands in Linux are generally called Processes, these are associated with 3 UIDs:
+
+* (UID of root = 0)
+
+1. Effective UID (UID of the owner) 
+2. Real UID (UID of the person who launched the process)
+3. Saved UID (Lets the Process switch between Effective UID and Real UID) 
+(When one is running, it saves the other one) 
+When we start the system, both 1 & 2 are same. 
