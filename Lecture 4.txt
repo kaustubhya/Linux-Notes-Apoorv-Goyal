@@ -66,4 +66,35 @@ n = 0, 1, 2, .....
 
 It refreshes in about every 5-10 seconds
 
-It is generally used to see which process is slowing our system down or affecting our processes.  
+It is generally used to see which process is slowing our system down or affecting our processes. 
+
+// Controlling Terminal 
+
+2 types:
+
+1. TTYN - Regular Terminal (No graphics associated with it, simply just a shell, no mouse nothing, use just your keyboard to type-in your commands).
+
+** To access it - Use: 'Ctrl + Alt + F1/F2/F3/....'
+
+2. pts/n - Pseudo Terminal 
+
+All processes are bound by a controlling terminal, when you close the terminal, the processes are also closed.
+
+Daemon Processes - Background Processes (run in background), they are opened and closed whenever the system turns on and off.
+These are not associated with the controlling terminal.
+
+? - Essential Processes, these are also not associated with the controlling terminal. We don't want them to shut down.
+
+Process are just instances of the program that are running and we can have as many instances as we want.
+
+Kernal keeps tabs on all the processes that are running, i.e. 
+it knows the status of the process, who is the owner of the process, what and how much resources are allocated to each process.
+
+When we run a code or a program in a system, the kernel loads up the code of that program in the memory and it determines and allocates all the resources that the program may need. 
+
+Kernel fullfils each and every need of a process.
+
+When a process ends, it frees up all the resources that it was using and those resources can now be used by other processes.
+
+
+// Creating a process
