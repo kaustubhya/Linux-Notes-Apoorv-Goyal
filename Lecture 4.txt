@@ -1,0 +1,69 @@
+Processes In Linux - How Linux Works Internally?
+
+Processes are basically just the programs that are running on our machines.
+
+These are managed by the kernel and each process has its own Process Id (PID).
+
+Kernel uses PID to identify processes.
+
+* To check all current processes running in our system, use -> 'ps'
+
+We get 4 columns as output here: 
+PID, TTY, TIME, CMD 
+
+TTY is the 'controlling terminal' of the process. Terminal ID is written in TTY.
+
+TIME - It refers to the total CPU usage time the CPU is taking.
+
+CMD/command - The command we are presently running.
+
+** 'ps aux' - Shows the process only run by you.
+It has the following flags: 
+** 'ps aux -a' - Shows all the processes running
+** 'ps aux -u' - Shows the details about the processes running
+** 'ps aux -x' - List down all the processes including those who don't have a TTY associated with them.
+
+** To Open a new terminal, use: 'Ctrl + Alt + T'
+
+** To Open a new window, use: 'Ctrl + Shift + T'
+
+** To toggle between the two windows, use 'Alt + 1 and Alt + 2' 
+
+After putting in 'ps aux' we see several fields, 
+
+1. USER field - Shows the user which owns all these processes
+
+2. PID field - Covered already
+
+3. %CPU field - How much % of CPU time is a process using.
+
+4. %MEM - How much % of memory is a process using out of the entire physical memory of the system.
+
+5. VSZ - Virtual memory usage of the entire process. It is the total amount of memory reserved/available for a process. A  process cannot use any more memory than the reserved memory.
+
+6. RSS - Amount of memory that the process is actually using.
+
+VSZ >= RSS
+
+memory here is listed in 'KB'
+
+7. TTY - 3 types of values here: 
+?, ttyn, pts/n 
+
+n = 0, 1, 2, .....
+
+? - No terminal associated.
+
+8. STAT - Status of the process 
+
+9. START - When (at what time) did we start the process.
+
+10. TIME - Covered
+
+11. Command - Covered
+
+** To get the real time data of the 'ps aux' command, use: 'top'
+
+It refreshes in about every 5-10 seconds
+
+It is generally used to see which process is slowing our system down or affecting our processes.  
