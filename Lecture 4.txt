@@ -98,3 +98,43 @@ When a process ends, it frees up all the resources that it was using and those r
 
 
 // Creating a process
+
+When a process is created, it might clone itself to create a new process, using "Fork System Call".
+
+System call is like a request the program makes to the kernel of the operating system. 
+
+The fork system call creates somewhat of an identical child process and assigns a PID to it.
+
+The original process from which the child process was cloned, becomes the parent process.
+
+Parent and Child have both unique and different PIDs.
+
+Now a child process can:
+1. Choose to run the same program as its parent. or
+2. Run a new program by using the "execve system call"
+
+** Now use "ps -l" to see a detailed version of all the processes.
+
+We notice 2 fields here: PID (Process ID) and PPID (Parent Process ID).
+
+** To see the PID of an invisible process via the PPID, use "ps aux | grep (PPID)"
+
+In this case:
+
+we had the bash process as the parent process, ps as the child process and gnome as the grand parent process.
+
+Hierarchy:
+
+gnome
+↓
+bash
+↓
+ps
+
+Now the ultimate parent process, one who is at the topmost level (i.e. the mother process) is called the "init" process.
+
+When system boots up, the kernel creates the mother (i.e. init) process and this has a PID of 1.
+
+This process runs on root privilages (since root is the owner of this process)and it runs a lot of processes which are responsible for the running of the system.  
+
+These processes which are responsible for the running of the system, are called "daemon processes". Mother process is their parent.
