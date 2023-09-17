@@ -138,3 +138,70 @@ When system boots up, the kernel creates the mother (i.e. init) process and this
 This process runs on root privilages (since root is the owner of this process)and it runs a lot of processes which are responsible for the running of the system.  
 
 These processes which are responsible for the running of the system, are called "daemon processes". Mother process is their parent.
+
+// Termination of a process
+
+A process can exit by using the "_exit system call". This system call frees all the resources that the process was using.
+
+When a process shuts down, it uses a "termination status" to tell the kernel why it is shutting down.
+
+The most common termination status is "0", which means that the process was successful.
+
+When a child process dies, the parent acknowledges the death of the child by using a "wait system call". 
+
+
+Edge cases:
+
+1. Parent dies before child:
+
+Orphan Processes - These are those child processes whose parent processes have died before them.
+In this scenario, the kernel puts the orphan (child) process under the mother process and the mother process initiates the "wait system call" so that the child can rest in peace.
+
+2. Parent process not acknowledging the death of the child process:
+
+In this scenario, the kernel transforms the child process into a zombie process.
+
+Here if the parent process calls the "wait system call", it is called "reaping", the child process can now rest in peace.
+
+If this does not happen then the kernel puts the zombie (child) process under the mother process and the mother process initiates the "wait system call" so that the child can rest in peace.
+
+ // Signal
+
+ It is a notification to the process that something has happened.
+
+ There are signal handlers for various signals which are used by processes.
+
+ Process can:
+ • Ignore the signals
+ • Catch the signals using signal handlers
+ • Block the signals using "signal mask".
+
+ Various types of signals:
+ • SIGHUP/HUP/1 - HangUP
+ • SIGINT/INT/2 - Interrupt
+ • SIGKILL/KILL/9 - Kill (This signal cannot be blocked using masking and it destroys the entire process).
+ • SIGSEGV/SEGV/11 - Segmentation fault
+ • SIGTERM/TERM/15 - Terminate
+ • SIGSTOP/STOP/19 - Stop 
+
+** To send a termination signal to kill any process, use: "kill (PID)", kernel then terminates the process and frees up the resources it was using.
+
+** To completely kill/destroy a process, use: "kill -9 (PID)", kernel here takes some time to terminate the process and free up the resources it was using.
+
+When the controlling terminal is closed, you are hung up and you don't have any medium to work anymore, in this scenario, processes receive SIGHUP signal.
+
+SIGINT is used to gracefully kill a process.
+
+SIGKILL just kills the process and no cleanup of resources is done after the process is killed.
+
+SIGTERM is used to clean up and free the resources first and then kill the process.
+
+SIGSTOP is used to stop the process for some time and then resume it.
+
+SIGSEGV is used when a process is trying to access some area of the memory that it has no access to.
+
+
+// time slice
+
+We often wonder that when our computer multitasks, all process run together all at once, but it is not the case, in fact the CPU gives each process a fraction of time to use it and then moves on to the next process, this fraction of time is what we call "time slice".
+This happens in a round robin manner, i.e. CPU first uses process P1, then P2 then P3 then again P1 then P2 then P3 then P1 again and so on.
