@@ -205,3 +205,120 @@ SIGSEGV is used when a process is trying to access some area of the memory that 
 
 We often wonder that when our computer multitasks, all process run together all at once, but it is not the case, in fact the CPU gives each process a fraction of time to use it and then moves on to the next process, this fraction of time is what we call "time slice".
 This happens in a round robin manner, i.e. CPU first uses process P1, then P2 then P3 then again P1 then P2 then P3 then P1 again and so on.
+
+CPU cores provide time slices to these processes, hence, the more number of cores a CPU has, the more no. of processes it can run simultaneously.
+
+The kernel handles the switching between the processes, memory management, tells which process gets how much time slice etc, basically, it is like the CEO of a company.
+
+Normally, all process get equal time slices but there is a way to customize the distribution of time slices to various processes by using a "Process Scheduling Algorithm" through a value called "nice".
+
+** Use the "top" command, there you'll see a column called "NI" (nice) where there are +ve, -ve and 0 values.
+
+Higher nos like +ve means CPU should give these processes "low" priority.
+
+Lower nos like -ve means CPU should give these processes "high" priority.
+
+0 is in the middle.
+
+2 ways and cases to influence the nice process to get a higher priority:
+
+• Change the nice value to a lower value.
+** use: "nice -n (priority value, usually -ve) (enter the command eg. cat)"
+Here the process is a new process, i.e. it does not already exist.
+
+• If the process already exists and is already running, use "renice" command.
+
+** Do: "renice (nice value (-ve)) -p (enter PID of that process)".
+
+
+// Process States
+
+1. R (Running or Renewable) → Process is already running, and it is waiting for the CPU to give it time to process.
+
+2. S (Interruptible Sleep) -> Process is waiting for an event to happen, for eg. waiting for the user to give an input.
+
+3. D (Un-Interruptible Sleep) -> These processes can not be killed or interrupted by a signal, if one encounters and gets stuck by such processes, reboot your system to get rid of them.
+
+4. Z (Zombie Process) → These processes are already terminated and are waiting for their "wait call status" to be collected.
+
+5. T (Stop) -> It means that the process is stopped.
+
+In linux, everything is a file. Hence, processes are a file too!
+
+proc - This directory contains information about all the processes running in the system.
+
+** Use: "ls /proc/"
+
+the subdirectories of this directory contains the PID of all the processes running currently.
+
+** To view the details of a current running process, do: 
+"cd /proc/(PID)" then do: "ls"
+
+** To view their status, use: "gedit status"
+
+The kernel overlooks everything about the processes and gathers information about the processes from this "proc" directory.
+
+
+// Jobs
+
+Sometimes in linux, we run some processes which take a lot of time to run in the foreground. 
+Hence we want them to run in the background.
+
+eg. Let's create a test file called test.py (python file) and make it sleep for 1000 sec
+
+In the home directory:
+** Use: "gedit test.py"
+then type the following inside the test.py file:
+
+(
+// inside the test.py file:
+
+import time
+
+time.sleep(1000)
+)
+
+** Now use: "ls" to see if the test.py file exists or not in the home directory.
+
+** To run this job, use: "python3 test.py"
+
+The process is now under sleep in the foreground for 1000 sec. which is a very long time and during this time, we cannot use the terminal.
+
+Hence, we want it to run in the background instead of the foreground, 
+so press "CTRL + C" to interrupt the program.
+
+** Now use: "python3 test.py &" to run it in the background.
+
+we see: "[Job ID] (PID)" of the job that is running in the background.
+
+** To view all the jobs running in the background, use "jobs"
+
+we see, 
+
+[job id]+ (job status) (job name)
+
+'+' means that it is the most latest job that has been created.
+
+if we have 2 jobs then, 
+• '+' means the latest job 
+• '-' means the second latest job
+• Jobs which have no sign are the older jobs 
+
+** To move a job from background to foreground, use: "fg %(job id)"
+
+fg = foreground
+
+** If a process is already running in the foreground and we want to move it to background, do:
+
+• "CTRL + Z" - This stops the process
+• "bg"
+
+Use, "jobs" to check their status.
+
+To kill a job, there are 2 ways:
+
+1. From the background, bring the job to the foreground using "fg %(job id)" then press "CTRL + C"
+
+** 2. To kill the job from the background itself, use: "kill %(job id)"
+
+Check its status with "jobs".
