@@ -1,1 +1,135 @@
-hi
+// Linux Filesystem, Partitions & Inodes
+
+When we connect some devices to our machines, it needs some device drivers to function properly and these device drivers need some sort of device files to function properly. 
+
+These device files are inside the '/dev' directory.
+
+** Do: 'ls /dev', to see all the directories inside the dev directory.
+
+Here there is a 'null' directory which moves any error directly to the trash without showing it as an error in the command output.
+It is the blackhole of the computer system.
+
+eg. 'lg 2> /dev/null' → gives no error
+'lg' → gives an error of 'command not found'
+
+** If we do 'ls -l /dev', we see various groups of data, which is as follows:
+
+1. Permissions (10 bit string)
+2. Owner
+3. Group 
+4. Major Device Number 
+5. Minor Device Number  
+eg. 10, 235 (10 = Major Device Number | 235 = Minor Device Number)
+6. Timestamp
+7. Device name
+
+All these are contents of the '/dev' directory.
+
+♦ Permissions
+
+If first bit is:
+d → directory 
+- → regular file 
+l → link 
+c → character (character device)
+b → block 
+p → pipe (|) 
+s → socket 
+
+♣ c → Character Devices - It transfer data, one character at a time.
+
+• b → block device - These devices transfer data in the form of large big fixed size blocks. 
+Block Devices - Hard Disks, SSDs, etc.
+
+p → pipe - Allows 2 or more processes to communicate with each other and instead of sending the data to the device itself, it sends the data to some other processes.
+
+s → socket device - These also facilitate the communications between processes, just like the piping devices but, they can communicate with multiple processes at once.
+
+♦ Owners - Covered
+
+♦ Groups - Covered
+
+♦ Major device number - Represents the device drivers that are being used by a device.
+
+♦ Minor Device Number - Tells the kernel what unique device it is.
+
+Two devices might have the same major device number but it will always have unique minor device numbers.
+
+Both (major and minor device number) of these are used for 'device characterization'.
+
+Sudo Devices - Devices which are not physically connected to the system.
+
+eg - /dev/null, /dev/zero, /div/random
+
+These 3 Sudo devices are also Character Devices.
+
+'/sys' directory - Gives a more detailed information about the '/dev' directory.
+
+/sys vs /dev
+
+• The /dev directory allows programs to access devices.
+
+• The /sys directory is used to view information and manage devices.
+
+• The /sys directory is also known as a 'filesystem'. It contains all the information about all the devices that are there in the system.
+
+eg, model of the device, manufacturer of the device, where is the device plugged in the system, the state of the device, the hierarchy of the device etc. 
+
+Lets explore the /sys directory: 
+** 'ls /sys'
+
+fs = filesystems
+
+** 'ls /sys/devices'
+
+** 'ls /sys/dev' (we see some links)
+links format- 'major device number:minor device number'
+
+** 'ls -l /sys/dev/block/' (Explore in deep about all these links)
+
+block -> all these devices are block devices
+
+** 'ls /sys/dev/block/11:0' (We can also take any other link apart from 11:0)
+
+The system manages the devices from here. 
+
+
+// Filesystems (fs) hierarchy:
+
+** 'ls -l /' checking all the components of the root directory.
+
+We see:
+
+1. / → Root directory - It is the root of the filesystem hierarchy. Everthing starts from here.
+
+2. bin → Bin Directory - It contains all the essential and ready to run binaries that are there, it also contains binaries for some of the most common commands that are there like, ls, cp, mkdir etc.
+
+bin = binaries
+
+3. boot → boot directory - This boot directory contains the boot loader files that are used by the kernel. 
+
+4. dev → dev directory - It contains the device files
+
+5. etc → etc directory - This is the core system config directory, it contains all the configuration files of any program that you are running.
+
+6. home → home directory - Personal directory which depends from user to user.
+
+7. lib → lib directory - This contains the library files that the binaries can use.
+
+8. lost and found directory
+
+9. media → media directory - It is the attachment point for any external devices connected to a system eg. a USB drive 
+
+10. mnt → Temporary mounted filesystem 
+
+11. opt - This contains the 'optional applications software packages'.
+
+** eg. 'ls /opt/'
+
+12. proc → process info 
+
+13. root → Home Directory for the root user (as root is a user too).
+
+14. run → This contains information about the running system since it was booted.
+
+15. sbin → System Binaries (only the root can run them).
