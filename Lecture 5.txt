@@ -133,3 +133,28 @@ bin = binaries
 14. run → This contains information about the running system since it was booted.
 
 15. sbin → System Binaries (only the root can run them).
+
+16. sys → Helps in managing all the devices in the filesystem.
+
+17. tmp → Storage for Temporary files.
+
+18. usr → user installed softwares and utilities.
+
+19. var → variable directory - Any user tracking, system logging, caches, basically anything which is continously changing is maintained in this directory.
+
+continously changing = variable
+
+
+// FileSystem Types
+
+Different filesystems  behave differently and support applications which are suitable to them.
+
+Each filesystem has an 'abstraction layer' (aka virtual filesystem).
+If the application is not supported by the filesystem, it is the job of the virtual filesystem to make them suitable for each other.
+(see image)
+
+Journaling - If we are doing some important work, we can note it down in a journal. By this way the system can know what it was doing before it was turned off.
+
+If the system turns off unexpectedly, it will check the journal first instead of checking the whole filesystem while rebooting. This saves us a lot of time else rebooting will take a lot longer time.
+
+41.17
