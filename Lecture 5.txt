@@ -157,4 +157,41 @@ Journaling - If we are doing some important work, we can note it down in a journ
 
 If the system turns off unexpectedly, it will check the journal first instead of checking the whole filesystem while rebooting. This saves us a lot of time else rebooting will take a lot longer time.
 
-41.17
+Desktop file system types:
+
+1. ext4 - One of the most latest versions of the linux file systems. Compatible with previous file versions like ext2, ext3 etc.
+ext4 supports disk space upto 1 exabyte  
+ext4 supports file space upto 16 terabytes 
+
+(8 bits = 1 byte)
+(1024 bytes = 1 KB aka kilobyte)
+(1024 KB = 1 MB aka megabyte)
+(1024 MB = 1 GB aka gigabyte)
+(1024 GB = 1 TB aka terabyte)
+(1024 TB = 1 PB aka petabyte)
+(1024 PB = 1 EB aka exabyte)
+(1024 EB = 1 ZB aka zetabyte)
+(1024 ZB = 1 YB aka yotabyte)
+(1024 YB = 1 BB aka brontobyte)
+(1024 BB = 1 GPB aka geopbyte)
+
+It (ext4) is the standard choice for a linux filesystem.
+
+2. Btrfs aka Butter/Better filesystem - This the more latest versions of linux filesystems, but still it is not stable with the linux filesystem even though it has some advanced features which are not there in the previous versions.
+
+3. XFS - High performing Journaling filesystem. It is good for servers that host media eg. YouTube. 
+
+4. NTFS and FAT - Windows filesystem
+
+5. HFS+ - MAC OS filesystem 
+
+** To check which filesystem you are using, use : "df -T"
+
+here we see:
+In /dev/sda2 we are using vfat filesystem i.e. we are using windows in this one.
+
+In /dev/sda3 we are using ext4 filesystem i.e. we are using linux in this one.
+
+All hardwares and SSDs in our systems are block devices.
+
+We can create partitions in these block devices, these are useful for separating data. Instead of having just one block device having only one filesystem, we can create multiple block devices each having its own filesystem via partitions.
