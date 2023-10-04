@@ -195,3 +195,117 @@ In /dev/sda3 we are using ext4 filesystem i.e. we are using linux in this one.
 All hardwares and SSDs in our systems are block devices.
 
 We can create partitions in these block devices, these are useful for separating data. Instead of having just one block device having only one filesystem, we can create multiple block devices each having its own filesystem via partitions.
+
+Partition Tables tell us how a disk is partitioned, where does the partition begin and end, which partitions are bootable, what sectors of a disk are allocated for the partitions etc. 
+
+2 Main partition schemes:
+
+1. MBR - Master Boot Record
+2. GPT - GUID Partition Table
+
+Partitions help us organize data, we can have 1 or more partitions in a disk.
+But these partitions cannot overlap each other.
+
+Free Space - Space in a disk which is not allocated to any partitions.
+
+
+
+MBR - Traditional partition table, used previously
+
+Drawbacks:
+It can only have 4 primary partitions
+It can support disk space upto only 2  TB.
+
+Out of these 4 primary partitions, we can only convert 1 partition as an 'Extended Partition'.
+This extended partition has a sub-unit called 'logical partition' which works exactly as the primary partition, which is utter nonsensical. 
+Extended partitions can have 'n' no. of logical partitions.
+
+
+
+GPT - This is becoming the new standard of partitioning of disks.
+
+It has only one type of partition. We can make as many partitions out of it as we like. 
+
+Each of these partitions has a GUID (Globally Unique ID). This is used usually with the UEFI based booting.
+
+Filesystem Structure - 
+
+Filesystem is just an organized collection of files and directories. It is like a database to manage the files.
+
+It has 4 major components:
+
+1. Boot Block - It is located in the first few sectors of the filesystem, it is not actually used by the filesystem but it is used to boot the OS. 
+Each OS needs only 1 Boot Block.
+
+2. Super Block - It is a single block that comes after the boot block. It contains some information about the filesystem like the size of the inode table, size of the filesystem etc.
+
+3. Inode Table - Like a Database that manages our files. Each file or a directory has a unique entry in the inode table. It just contains information about the files.
+
+4. Data Blocks - Actual data of the files and directories.
+
+** "sudo parted -l" - Shows the filesystem structure and the partitions table in a little more detail.
+
+Tools for partitioning:
+
+1. fdisk - CLI based, does not support GPT
+2. parted -  CLI based, does support GPT and MBR.
+3. G-parted - GUI based version of parted.
+4. gdisk - CLI based, does not support MBR.
+
+recommended -> parted / G-parted
+
+** "cat /etc/fstab" - Static file system information.
+When you automatically want to mount a filesystem on the startup of your system. You can add it in this file.
+
+When we want to read or go thorough a filesystem, we must mount it first.
+
+We see many info like UUID, filesystem types, mounting options, <dump>, <pass>, swap
+
+<dump> - Used by dump utility on when to create a backup. Default value = 0.
+
+<pass> - In case of any discrepancies, in what order should our filesystem should be checked.
+0 → don't check it 
+1 → check it 
+
+swap - Helps in assigning some virtual memory to our system.
+When the RAM is almost full, we can use swap to create a virtual memory partition, put all low priority tasks (idle processes) there. By this some RAM memory is freed up for the high priority tasks (active processes).
+
+** "df -h" - It shows me the utilization of the currently mounted filesystems. 
+
+"-h" flag means, give me the human readible form of it.
+
+** To check the size usage by all processes, files and directories in our system, use: "du -h"
+
+** To see the longer process, use: "du -h /"
+
+
+Inode (Index Node) - Each inode table has some files / directories which contain an inode. These inodes contain so much information about a file except for the filename and the file itself, as they are stored in the disk and not in the inode.
+
+When a filesystem is created, some space for inode is left.
+
+When our inode space is full, we cannot save and store files in the disk, even though the disk has some space still left.
+
+** To know how much inodes are left in our system, use: "df -i".
+
+When we create many empty files / directories, inode table fills up faster than disk space resulting in 0 inodes.
+
+Generally disk space is lesser than inode space but if we do the above thing, we can end up with zero inodes.
+
+Inodes are identified with inode numbers.
+
+Each new file/directory created, gets an inode number.
+
+Usually they are in ascending order like 1,2,3,....
+
+But if a file from a lower inode number say 2 is deleted, that 2 is freed up and it will be given to the immidiate next new file/directory.
+
+** To check all the inode numbers assigned, use: "ls -li"
+
+ls = list
+-l = long/detailed list
+-i = show inode number  
+
+** Get a more detailed information about this by using: "stat (directory name/)"
+We are in home directory now.
+
+1.24.30
