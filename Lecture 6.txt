@@ -174,3 +174,30 @@ or
 
 • do: "ls /lib/systemd/system | less" 
 
+Here there is a file called 'default.target', all the goals are inside this file.
+
+Let's look at this file:
+
+** do:
+• "ls /lib/systemd/system/de" then press 'TAB'
+• now: "cat /lib/systemd/system/default.target" then press 'ENTER'
+
+It (this file) has all the info, that system needs to do on bootup.
+
+It figures out all the dependencies that are there and starts activating them as they are.
+
+Different Systemd Targets:
+
+1. poweroff.target -> Shutdown
+2. rescue.target -> Single User 
+3. multi-user.target -> Multi User with Networking 
+4. graphical.target -> Multi User with Networking and GUI 
+5. reboot.target -> reboot 
+
+graphical.target => default 
+
+** To shut down the system, do: "sudo shutdown -h now" 
+
+-h => poweroff or halt 
+
+** To reboot the system, do: "sudo reboot"
