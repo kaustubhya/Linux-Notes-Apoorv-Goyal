@@ -333,4 +333,38 @@ Normally files are not stored in a sequential manner but inodes make it easier f
 
 All shortcut icons or shortcuts in an OS are just "aliases" of the original directory/file/program.
 
-Symlinks = Symbolic Links are like shortcuts in Linux.
+Symlinks = Symbolic Links = Soft Links, are like shortcuts in Linux.
+
+** To create a softlink, do: "ln -s (original filename) (softlink name)"
+
+Then do "ls -l"
+
+
+ln = link
+-s = soft
+
+Softlinks point towards the name of the original file to which they are linked to.
+
+
+HardLinks:
+
+** To create a hardlink, do: "ln (original filename) (hardlink name)" 
+
+Then do "ls -l"
+
+We see hardlinks 'donot' point to the name of the original file to which they are linked to.
+
+Instead they point to the inode like the original file.
+
+
+Inode ← HardLinks
+↑
+File
+↑
+Softlinks
+
+If:
+• We make changes in the original file, both hardlinks and Softlinks will reflect on that.
+• If we delete the original file, softlink will stop working as it is pointing to the original file. But hardlink will still work as it points to the inode rather than pointing to the original file.
+
+As hardlink and original file both point towards the inode, they have the same inode number.
