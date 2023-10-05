@@ -1,0 +1,126 @@
+// Boot Process Stages:
+
+1. BIOS → Basic Input/Output Process - This BIOS initializes the hardware and makes sure that the hardware is good to go by running some power on tests/checks.
+
+Main Job - It loads the 'boot loader'
+
+2. Boot Loader - It loads the kernel into the memory.
+
+GRUB Boot Loader is the 'Universal Linux Standard' and is one of the most common boot loaders. It is used to dual boot a system.
+
+3. Kernel - Once the Kernel is loaded, it immediately initializes the memory and the devices in the system.
+
+Main job - Load the init aka mother process
+
+4. Init - Init process starts and stops all the essential processes that run our system. It runs and controls our system.
+
+
+Linux OS can be classified into 3 levels/layers of abstraction:
+
+1. Hardware - Includes CPU, memory, ports, hard disks, SSDs etc.
+It is the physical layer that computes what our system is actually doing.
+
+2. Kernel - Handles processes, manages memories, system calls etc.
+
+3. User Space - Handles the shell running, graphics etc. Basicaaly what we see is handled by this layer.
+
+
+Privilages of these different levels:
+
+1. Kernel operates in 'Kernel Mode'
+2. User operates in 'User Mode'
+
+Kernel Mode - Kernel here has complete access to the hardware and it controls everything in the system.
+
+User Mode - It is allowed access to a very small amount of safe memory and the CPU.
+
+Basic operations like READ, WRITE, ACCESS, controlling some networking ports, etc.  basically anything hardware related is done in Kernel mode.
+
+Both the User Mode and the Kernel Mode are also known as 'Privilage Levels / Protection Rings'
+
+The hardware trusts the kernel more but does not trust the user much. Hence hardware shares everything with the kernel.
+
+
+// System calls
+
+It allows us as a user to perform some actions as the kernel mode, and then we switch back into the user mode.
+
+While we are in the kernel mode (via system call), we can exchange information with the hardware as a user.
+
+System calls aka 'Sys calls' make some services available to the user applications or user processes by using a 'System Call Api'.
+
+The amount of services given out by the kernel thorough the APIs is fixed. We cannot add more to it.
+
+Our system has a table containing different system calls, each system call having a 'Unique ID'.
+
+The kernel knows which system call is sent to it, and what services to share it via the APIs by recognizing its 'Unique System Call ID'.
+
+
+
+// 3 Implementations of INIT process
+
+1. System V Implementation - Traditional Way
+
+2. Upstart Implementation - Used earlier in Ubuntu.
+
+3. System D Implementation - New Standard
+
+
+♦ System V Implementation:
+
+It starts and stops processes sequentially.
+
+Advantage - Easier to resolve dependency issues.
+eg. Let's have 2 Processes A and B, here process B is dependent on A. Therefore System V Implementation makes sure to start process A first and then process B to resolve this dependency issue.
+
+Disadvantage - Performance is not that great as the processes are starting and stopping one at a time.
+
+It does things one at a time and not simultaneously.
+
+The status of the system while using System V Implementation is defined by 'runlevels'.
+
+These runlevels are from 0 to 6.
+
+0 → Shutdown
+1 → Single User
+2 → Multi User without networking 
+3 → Multi User with networking 
+4 → Unused / Idle
+5 → Multi Users with networking and GUI
+6 → Reboot
+
+When a system starts, it checks which runlevel we are at currently and based on that runlevel's config, it executes all the necessary scripts.
+
+* All our config exists in '/etc' directory.
+
+** Do: "ls /etc/rc" then press "tab" multiple times.
+
+-rc → run level config.
+
+We see some directories listed.
+
+** Now Do: "ls /etc/rc0" then press "tab" 2 to 3 times.
+
+This shows us all scripts that are executed when run level is 0 i.e. shutdown.
+
+We can also do "ls /etc/rc1", ...., "ls /etc/rc6"
+
+Just press 'tab' here and not 'enter'.
+
+** To check all system V services, do: "service --status-all"
+
+** We can do: "sudo service (service name) start"
+"sudo service (service name) stop"
+"sudo service (service name) restart"
+
+These commands can be used in other implementations also.
+
+
+♦ Upstart Implementation: 
+
+Developed by Canonical.
+
+Uses Events and Jobs model.
+
+It responds to an event as soon as it happens.
+
