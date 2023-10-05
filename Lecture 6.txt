@@ -124,3 +124,53 @@ Uses Events and Jobs model.
 
 It responds to an event as soon as it happens.
 
+Jobs are the actions performed.
+
+Events are the messages received from other processes that trigger the jobs.
+
+** To see the list of all jobs along with their config, do: "ls /etc/init"
+
+Press 'Tab' after this and we see that we have only one config and that is: whoopsie.conf
+
+** Do: "cat /etc/init/whoopsie.conf" to see config of whoopsie.conf script.
+
+We see:
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+it means start if runlevels are 2,3,4,5
+
+and stop if runlevels are not (!) 2,3,4,5 i.e. runlevels are 0,1,6.
+
+How the Upstart Implementation works:
+
+1. It loads up all the configs from /etc/init.
+
+2. When the startup event occurs, it runs all the jobs that were triggered by that event.
+
+3. This process of occuring of an event and running of the jobs triggered by that event happens in the form of a 'chain reaction' and it keeps on happening untill all the jobs are completed.
+
+
+♦ System d Implementation:
+
+It uses 'goals' to get your system up and running.
+
+'Goals' are just some 'targets' that need to be achieved.
+
+These 'targets' have some dependencies that also needs to be achieved.
+
+This system is flexible and robust and it does not need to do things sequentially to get all the processes started.
+
+
+How it works:
+
+1. Loads up the config files.
+
+** To get the config files, 
+• do: "ls /etc/systemd/"
+(press 'enter' here)
+
+or 
+
+• do: "ls /lib/systemd/system | less" 
+
