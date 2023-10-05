@@ -308,4 +308,29 @@ ls = list
 ** Get a more detailed information about this by using: "stat (directory name/)"
 We are in home directory now.
 
-1.24.30
+How does an Inode locate a file?
+
+In a filesystem, each Inode contains 15 pointers.
+
+These collections of 15 pointers is called a "Super Block", they have a size of about 4 KB.
+
+The first 12 pointers of this superblock, point directly towards the datablock of a file to which the inode belongs to.
+
+The 13th block points towards a group/array of pointers which point towards the datablock.
+
+The 14th block points towards a group/array of pointers which again point towards a group/array of pointers which point towards the datablock.
+
+The 15th block points towards a group/array of pointers which again point towards a group/array of pointers which again point towards a group/array of pointers which point towards the datablock.
+
+This makes the inodes form some consistancy.
+
+All these blocks of array/group of pointers are called "Indirect Blocks" as they point indirectly towards a group of data.
+
+Normally files are not stored in a sequential manner but inodes make it easier for us to locate these files.
+
+
+// Symlinks
+
+All shortcut icons or shortcuts in an OS are just "aliases" of the original directory/file/program.
+
+Symlinks = Symbolic Links are like shortcuts in Linux.
