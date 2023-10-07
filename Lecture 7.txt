@@ -1,0 +1,190 @@
+** "top" - This command is similar to 'ps-aux' but instead of giving static one time data, it gives us real time dynamic data of what processes are using which resources.
+
+Whenever we run a process, they have a default 'niced' value.
+
+No process is 'niced' by default.
+
+When we run "top" command, we see some values:
+
+• 1st Line lists the real time clock, time for which the computer's Linux OS is ON and running, no. of users and load average.
+• 2nd Line shows total number of processes, running processes, sleeping processes, stopped processes and zombie processes.
+
+• 3rd line from the top shows things wrt CPU, they are:
+
+CPU % of time spent on running the processes, that are:
+
+us -> user processes that are not niced
+sy -> meant for the system or run by the kernel
+ni -> niced processes 
+id -> idle processes 
+
+Apart from processes it also shows CPU % of time spent on:
+wa -> waiting for I/O streams
+hi -> hardware interrupts 
+si -> software interrupts
+st -> steal time (% of CPU time stolen by some other process or OS (if we are using 2 OS in 1 computer simultaneously via virtual box)).
+
+• 4th line shows memory utilization (total memory, free memory, used memory and cache/buff memory)
+
+• 5th line shows swap memory utilization (total swap memory, free swap memory, used swap memory and available swap memory) 
+
+Now the 'top' command shows us all the information about all the running processes.
+
+** We can also take a look and monitor on a specific process if we want. For this, do: "top -p (Enter PID)"
+
+-p => Process ID 
+
+** To know what files are currently in use by a process, use: "lsof"
+
+lsof => list of files
+
+** To get it in a more orderly manner, do: "lsof | less"
+
+
+// Threads
+
+Inside a process, there might be two different bits of code doing 2 different things while running simultaneously.
+
+These bits of code can be called Multiple Threads of Execution. This is provided by the kernel to us.
+
+Threads are also called 'Lightweight Processes'.
+
+** To check how many threads are there,  inside a process, do: "ps m"
+ps -> processes
+
+Threads donot have a PID and a terminal (tty) associated to them as they are part of a process.
+
+Threads are represented here by '- -', one each for PID and Terminal.
+
+Gnome and Binary processes have 3 threads each.
+
+Bash and 'ps m' have 1 thread each.
+
+** To check the time, user and load averages (or the first line of the 'top' command), do: "uptime". 
+
+// Load Averages 
+
+It shows how much CPU load is there on our system.
+
+We see 3 values of load averages generally.
+
+eg. load average: 0.42, 0.17, 0.08
+
+So, 1st value (0.42) means how much CPU load is there on our system after the interval of 1 minute.
+
+2nd value (0.17) means how much CPU load is there on our system after the interval of 5 minutes.
+
+3rd value (0.08) means how much CPU load is there on our system after the interval of 15 minutes.
+
+CPU load -> Average number of processes waiting to be executed by the CPU.
+
+If we have a 1 core CPU: (1 lane)  
+
+• If number of processes is same as the CPU's load handling ability, then CPU load = 1.
+
+• If number of processes is twice the CPU's load handling ability, then CPU load = 2.
+
+• If number of processes is half the CPU's load handling ability, then CPU load = 0.5.
+
+• CPU load can never be 0 as there are some processes that are always running even if the system is in shut down mode.Here CPU load will be very less but not zero.
+
+In a 4 Core CPU: (4 lanes) We can handle 4 processes at once, so CPU load here reduces to some extent.
+
+♣ If a CPU has 4 cores and each core has 2 threads then the CPU can handle 8 threads at a time.
+
+**  To check how much memory our system is utilizing right now, do "vmstat"
+
+Here:
+Process:
+r -> how many processes are there in runtime
+b -> how many processes are there in uninterruptable sleep.
+
+Memory: 
+
+How much we have:
+• swapped memory 
+• buffer memory 
+• cache memory
+
+Swap:
+
+How much memory:
+si -> swapped in from disk 
+so -> swapped out from disk
+
+io:
+bi -> How many blocks received in from a block device
+bo -> How many blocks were sent out from the block device.
+
+system: 
+in -> How many interrupts are there per second 
+cs -> How many context switches are there per second 
+
+(Context Switches - How much time is given to each process in one second)
+
+CPU:
+
+How much time is:
+
+us -> Allocated for the user 
+sy -> Allocated for the system
+id -> idle
+wa -> Waiting for I/O streams 
+st -> Steal Time 
+
+
+// Logging 
+
+All the processes and events in our system that is happening is saved in a file called 'LOG' which is human readable.
+This process of saving is called 'logging'. 
+
+All of this is saved and logged in the '/var' directory which saves 'variable data'.
+
+
+How are logs created?
+
+• A service called 'syslog' collects all the information and sends it to a 'System Logger' which then logs it into a file called '/var/log/syslog'.
+
+Syslog has a Daemon component called 'syslogd'
+
+** To view all the events that are being logged, in our system, do: "cat /var/log/syslog | less".
+
+** To view the same in a shorter format, use: "tail /var/log/syslog".
+
+All the logs here are mentioned in with their time stamps. 
+
+** To check what all files here are managed by the system logger, do: "cat /etc/rsyslog.d/"
+Press 'tab' after this
+
+We see here 2 config files.
+
+** To check out a file's details here, do: "cat /etc/rsyslog.d/(filename)"
+
+# = Comments here 
+
+
+// Sending Messages manually into the logs: 
+
+** To add a message manually, do: "logger -s (message)" 
+
+** To view it in the logs, do: "tail -n 100 /var/log/syslog"
+
+-n 100 -> means check out the last 100 logs here for me.
+
+** To see what all files are there in our logs, do: "ls /var/log/"
+Press 'tab' multiple times after this
+Press 'Backspace' to exit out of it. 
+
+** "cat /var/log/dmesg" shows logs of all internal and daemon processes.
+
+
+// Logrotate 
+
+It does the log management for us.
+
+Logrotate runs every day through 'cron jobs'.
+
+There are a lot of tools to manage logs but Logrotate is the most common one. 
+
+** Logrotate has several config files, to view them, do: "cat /etc/logrotate.d/"
+Press 'Tab' after this. 
